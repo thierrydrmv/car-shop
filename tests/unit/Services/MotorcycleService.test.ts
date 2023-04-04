@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import IMotorcycle from '../../../src/Interfaces/IMotorcycle';
 import MotorcycleService from '../../../src/Services/MotorcycleService';
 import MotorCycle from '../../../src/Domains/Motorcycle';
+import AbstractODM from '../../../src/Models/AbstractODM';
 
 const motorcycleOutput: MotorCycle = new MotorCycle({
   model: 'Honda Cb 600f Hornet',
@@ -16,18 +17,18 @@ const motorcycleOutput: MotorCycle = new MotorCycle({
   engineCapacity: 600,
 });
 
+const motorcycleInput: IMotorcycle = {
+  model: 'Honda Cb 600f Hornet',
+  year: 2005,
+  color: 'Yellow',
+  status: true,
+  buyValue: 30.000,
+  category: 'Street',
+  engineCapacity: 600,
+};
+
 describe('Adicionando uma moto ao banco de dados', function () {
   it('Deve adicionar uma moto com sucesso', async function () {
-    const motorcycleInput: IMotorcycle = {
-      model: 'Honda Cb 600f Hornet',
-      year: 2005,
-      color: 'Yellow',
-      status: true,
-      buyValue: 30.000,
-      category: 'Street',
-      engineCapacity: 600,
-    };
-    
     sinon.stub(Model, 'create').resolves(motorcycleOutput);
 
     const service = new MotorcycleService();
@@ -49,6 +50,16 @@ describe('Adicionando uma moto ao banco de dados', function () {
     const service = new MotorcycleService();
     const result = await service.getAllMotorcycles();
     expect(result).to.be.deep.equal([motorcycleOutput]);
+  });
+
+  it('Deve atualizar uma Moto', async function () {
+    const updateOutputMotorcycle: MotorCycle = new MotorCycle(motorcycleInput);
+    sinon.stub(AbstractODM.prototype, 'update').resolves(motorcycleOutput);
+
+    const service = new MotorcycleService();
+    const result = await service.editMotorcycle('642b0df19506445d7b0bc77b', motorcycleInput);
+
+    expect(result).to.be.deep.equal(updateOutputMotorcycle);
   });
 
   afterEach(function () {
