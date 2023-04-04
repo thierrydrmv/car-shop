@@ -53,13 +53,12 @@ describe('Adicionando uma moto ao banco de dados', function () {
   });
 
   it('Deve atualizar uma Moto', async function () {
-    const updateOutputMotorcycle: MotorCycle = new MotorCycle(motorcycleInput);
     sinon.stub(AbstractODM.prototype, 'update').resolves(motorcycleOutput);
 
     const service = new MotorcycleService();
     const result = await service.editMotorcycle('642b0df19506445d7b0bc77b', motorcycleInput);
 
-    expect(result).to.be.deep.equal(updateOutputMotorcycle);
+    expect(result).to.be.deep.equal(motorcycleOutput);
   });
 
   afterEach(function () {

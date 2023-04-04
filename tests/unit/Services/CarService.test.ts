@@ -53,13 +53,12 @@ describe('Testando o service dos carros', function () {
   });
 
   it('Deve atualizar um Car', async function () {
-    const updateOutputCar: Car = new Car(carInput);
     sinon.stub(AbstractODM.prototype, 'update').resolves(carOutput);
 
     const service = new CarService();
     const result = await service.editCar('642b0df19506445d7b0bc77b', carInput);
 
-    expect(result).to.be.deep.equal(updateOutputCar);
+    expect(result).to.be.deep.equal(carOutput);
   });
   
   afterEach(function () {
